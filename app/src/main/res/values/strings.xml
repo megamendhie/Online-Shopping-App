@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">DeSantos Directory</string>
+    <string name="hello_blank_fragment">Blank Frag</string>
+    <string name="txt_welcome_back">Welcome Back</string>
+    <string name="txt_category_image">Category image</string>
+    <string name="txt_sample">Sample</string>
+</resources>
