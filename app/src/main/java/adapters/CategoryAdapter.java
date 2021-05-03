@@ -4,22 +4,30 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
+import com.sqube.desantosdirectory.LoginActivity;
 import com.sqube.desantosdirectory.ProductActivity;
 import com.sqube.desantosdirectory.R;
+import com.sqube.desantosdirectory.RequestServiceActivity;
 
 import models.Category;
+import utils.FirebaseUtil;
 
 import static models.Commons.MODEL;
+import static models.Commons.PRODUCT;
+import static models.Commons.SERVICE;
 
 public class CategoryAdapter extends FirestoreRecyclerAdapter<Category, CategoryAdapter.CategoryHolder> {
     private final int VIEW_PRODUCT = 1;
@@ -33,14 +41,20 @@ public class CategoryAdapter extends FirestoreRecyclerAdapter<Category, Category
     @Override
     protected void onBindViewHolder(@NonNull CategoryHolder holder, int position, @NonNull final Category model) {
         holder.txtName.setText(model.getName());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), ProductActivity.class);
+        holder.itemView.setOnClickListener(view -> {
+         Intent intent = model.getType().equals(PRODUCT)? new Intent(view.getContext(), ProductActivity.class):
+                        new Intent(view.getContext(), RequestServiceActivity.class);
                 intent.putExtra(MODEL, model);
+                if(model.getType().equals(SERVICE)&& FirebaseUtil.getAuth().getCurrentUser()==null){
+                    view.getContext().startActivity(new Intent(view.getContext(), LoginActivity.class));
+                    Toast.makeText(view.getContext(), "Sign in first", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 view.getContext().startActivity(intent);
-            }
         });
+
+        if(!model.getIcon().isEmpty() && !model.getIcon().equals("non"))
+            Glide.with(holder.imgIcon.getContext()).load(model.getIcon()).into(holder.imgIcon);
     }
 
     @Override
@@ -71,6 +85,7 @@ public class CategoryAdapter extends FirestoreRecyclerAdapter<Category, Category
             lnrCategory = itemView.findViewById(R.id.lnrCategory);
             imgIcon = itemView.findViewById(R.id.imgIcon);
             txtName = itemView.findViewById(R.id.txtName);
+
         }
     }
 }
