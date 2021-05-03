@@ -6,6 +6,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="bottomSheetDialogTheme">@style/CustomButtomSheetDialogTheme</item>
+    </style>
+
+    <style name="CustomAppTheme" parent="AppTheme">
+        <item name="colorPrimary">#F9A825</item>
+        <item name="colorPrimaryDark">#D6901F</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -17,5 +23,12 @@
         <item name="boxStrokeColor">#70707A</item>
         <item name="hintTextColor">#70707A</item>
         <item name="android:textColorHint">#70707A</item>
+    </style>
+
+    <style name="CustomButtomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/CustomButtomSheetStyle</item>
+    </style>
+    <style name="CustomButtomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
     </style>
 </resources>
