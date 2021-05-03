@@ -26,10 +26,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.gson.Gson;
 
+import models.User;
 import utils.FirebaseUtil;
 
 import static models.Commons.EMAIL;
 import static models.Commons.PASSWORD;
+import static models.Commons.PROFILE;
+import static models.Commons.USERS;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private GoogleSignInClient mGoogleSignInClient;
@@ -41,7 +44,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
     private FirebaseUser user;
 
@@ -62,7 +65,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(LoginActivity.this, gso);
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         edtEmail.setText(prefs.getString(EMAIL, ""));
         edtPassword.setText(prefs.getString(PASSWORD, ""));
@@ -78,12 +81,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 loginWithEmail();
                 break;
             case R.id.btnGoogle:
-                LoginWithGoogle();
+                loginWithGoogle();
                 break;
         }
     }
 
-    private void LoginWithGoogle() {
+    private void loginWithGoogle() {
         Intent intent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(intent, GOOGLE_SIGN_IN);
     }
@@ -112,8 +115,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 editor.putString(EMAIL, email);
                 editor.putString(PASSWORD, password);
                 editor.apply();
-                finish();
-                startActivity(new Intent(this, ProfileActivity.class));
+                verifyUser(FirebaseUtil.getAuth().getCurrentUser().getUid());
             }
             else
                 Snackbar.make(btnLogin, task.getException().getMessage(), Snackbar.LENGTH_SHORT).show();
@@ -145,6 +147,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
     }
+
     public void authenticateWithGoogle(GoogleSignInAccount account){
         final AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         FirebaseUtil.getAuth().signInWithCredential(credential)
@@ -164,6 +167,37 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void verifyUser(String userId) {
+        FirebaseUtil.getDatabase().collection(USERS).document(userId).get().addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()){
+                if (task.getResult() == null || !task.getResult().exists()) {
+                    String displayName = user.getDisplayName();
+                    String[] names = displayName.split(" ");
+                    String firstName = names[0];
+                    String lastName = names[1];
+                    User newUser = new User(firstName, lastName, user.getEmail(), userId);
+
+                    FirebaseUtil.getDatabase().collection(USERS).document(userId).set(newUser).addOnCompleteListener(this, task2 -> {
+                        if (task.isSuccessful()) {
+                            String json = gson.toJson(newUser);
+                            editor = prefs.edit();
+                            editor.putString(PROFILE, json);
+                            editor.apply();
+                            finish();
+                            startActivity(new Intent(this, ProfileActivity.class));
+                        }
+                    });
+                }
+                else if(task.getResult().exists()){
+                    User user = task.getResult().toObject(User.class);
+                    String json = gson.toJson(user);
+                    editor = prefs.edit();
+                    editor.putString(PROFILE, json);
+                    editor.apply();
+                    finish();
+                    startActivity(new Intent(this, ProfileActivity.class));
+                }
+            }
+        });
 
     }
 }
