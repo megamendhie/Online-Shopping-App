@@ -4,11 +4,20 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.gson.Gson;
 
 import models.User;
 import utils.FirebaseUtil;
@@ -16,75 +25,70 @@ import utils.FirebaseUtil;
 import static models.Commons.CATEGORY;
 import static models.Commons.PRODUCT;
 import static models.Commons.SERVICE;
-import static models.Commons.USERS;
 
-public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class ProfileActivity extends AppCompatActivity{
     private TextView txtName;
     private String userId;
+    private final Gson gson = new Gson();
+    private User myProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String json = prefs.getString("profile", "");
+        myProfile = (json.equals("")) ? null : gson.fromJson(json, User.class);
+        if(myProfile==null)
+            return;
+
+        setContentView(myProfile.isAdmin()?R.layout.activity_profile:R.layout.activity_profile_user);
+        if(myProfile.isAdmin()){
+            Button btnManageAdmin = findViewById(R.id.btnManageAdmin);
+            btnManageAdmin.setVisibility(myProfile.getRole().equals("owner")?View.VISIBLE:View.GONE);
+        }
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Profile");
 
         txtName = findViewById(R.id.txtName);
-        Button btnViewProducts = findViewById(R.id.btnViewProducts);
-        btnViewProducts.setOnClickListener(this);
-        Button btnViewServices = findViewById(R.id.btnViewServices);
-        btnViewServices.setOnClickListener(this);
-        Button btnOrders = findViewById(R.id.btnOrders);
-        btnOrders.setOnClickListener(this);
-        Button btnManageAdmin = findViewById(R.id.btnManageAdmin);
-        btnManageAdmin.setOnClickListener(this);
-        Button btnSignout = findViewById(R.id.btnSignout);
-        btnSignout.setOnClickListener(this);
         if(FirebaseUtil.getAuth().getCurrentUser()==null)
             return;
         userId = FirebaseUtil.getAuth().getCurrentUser().getUid();
-        setUserDetails();
+
+        ImageView imgDp = findViewById(R.id.imgDp);
+
+        txtName.setText(String.format("%s %s", myProfile.getFirstName(), myProfile.getLastName()));
+        if(myProfile.getPic()!=null&&!myProfile.getPic().isEmpty()&&!myProfile.getPic().equals("non"))
+            Glide.with(imgDp.getContext()).load(myProfile.getPic()).into(imgDp);
     }
 
-    private void setUserDetails() {
-        FirebaseUtil.getDatabase().collection(USERS).document(userId).get().addOnCompleteListener(this, task -> {
-            if(!task.isSuccessful()||task.getResult()==null)
-                return;
-            User user = task.getResult().toObject(User.class);
-            txtName.setText(String.format("%s %s", user.getFirstName(), user.getLastName()));
-        });
+    public void openProductOrders(View view){
+        startActivity(new Intent(this, ProductPurchaseAdminActivity.class));
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.btnSignout:
-                signOut();
-                break;
-            case R.id.btnViewProducts:
-                openCategory(PRODUCT);
-                break;
-            case R.id.btnViewServices:
-                openCategory(SERVICE);
-                break;
-            case R.id.btnOrders:
-            case R.id.btnManageAdmin:
-                startActivity(new Intent(this, AddCategoryActivity.class));
-                break;
-        }
-
+    public void openServiceRequests(View view){
+        startActivity(new Intent(this, ServiceRequestAdminActivity.class));
     }
 
-    private void openCategory(String category) {
+    public void openCategory(View view) {
+        String category = view.getId()==R.id.btnViewProducts?PRODUCT:SERVICE;
         Intent intent = new Intent(this, AdminCategoryActivity.class);
         intent.putExtra(CATEGORY, category);
         startActivity(intent);
     }
 
-    private void signOut(){
-        FirebaseUtil.getAuth().signOut();
-        finish();
+    public void signOut(View view) {
+        if (FirebaseUtil.getAuth().getCurrentUser() != null) {
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getResources().getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build();
+            GoogleSignInClient mGoogleSignInClient= GoogleSignIn.getClient(ProfileActivity.this, gso);
+
+            FirebaseUtil.getAuth().signOut();
+            mGoogleSignInClient.signOut();
+            finish();
+        }
     }
 
     @Override

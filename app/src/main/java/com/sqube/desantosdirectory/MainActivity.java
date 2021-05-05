@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -14,6 +15,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import fragments.CartFragment;
 import fragments.ProductFragment;
 import fragments.ServiceFragment;
+import services.UserDataFetcher;
+import utils.FirebaseUtil;
 
 import static models.Commons.FRAG_CART;
 import static models.Commons.FRAG_PRODUCT;
@@ -26,7 +29,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     final Fragment fragmentCart = new CartFragment();
 
     private Fragment fragmentActive = fragmentProduct;
-    private FragmentManager fragmentManager = getSupportFragmentManager();
+    private final FragmentManager fragmentManager = getSupportFragmentManager();
+
+    private Intent serviceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
         else
             loadFragment();
+
+        serviceIntent = new Intent(MainActivity.this, UserDataFetcher.class);
+        startService(serviceIntent);
     }
 
     private void loadFragment() {
@@ -85,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     fragmentActive = fragmentCart;
                 }
                 return true;
-
         }
         return false;
     }
@@ -94,5 +101,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString(LAST_FRAGMENT, fragmentActive.getTag());
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(serviceIntent!=null)
+            stopService(serviceIntent);
     }
 }
