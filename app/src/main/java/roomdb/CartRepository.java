@@ -9,7 +9,7 @@ import java.util.List;
 import models.CartProduct;
 
 public class CartRepository {
-    private CartDao cartDao;
+    private final CartDao cartDao;
     private LiveData<List<CartProduct>> allCartProducts;
 
     public CartRepository(Application application){
@@ -23,10 +23,18 @@ public class CartRepository {
     }
 
     public void deleteFromCart(String docId){
-        DeSantosDb.databaseWriteExecutor.execute(() -> cartDao.deleteCartById(docId));
+        DeSantosDb.databaseWriteExecutor.execute(() -> cartDao.removeCartById(docId));
     }
 
     public void addToCart(CartProduct cartProduct){
         DeSantosDb.databaseWriteExecutor.execute(() -> cartDao.addCart(cartProduct));
+    }
+
+    public void update(CartProduct cartProduct){
+        DeSantosDb.databaseWriteExecutor.execute(() -> cartDao.Update(cartProduct));
+    }
+
+    public void deleteAll(){
+        DeSantosDb.databaseWriteExecutor.execute(cartDao::deleteAll);
     }
 }

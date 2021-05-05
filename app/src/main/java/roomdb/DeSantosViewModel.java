@@ -19,7 +19,7 @@ public class DeSantosViewModel extends AndroidViewModel {
         cartProducts = repository.getAllCartProducts();
     }
 
-    LiveData<List<CartProduct>> getCartProducts(){
+    public LiveData<List<CartProduct>> getCartProducts(){
         return cartProducts;
     }
 
@@ -29,5 +29,11 @@ public class DeSantosViewModel extends AndroidViewModel {
 
     public void deleteFromCart(String docId){
         repository.deleteFromCart(docId);
+    }
+
+    public void updateCart(CartProduct cartProduct){repository.update(cartProduct);}
+
+    public void deleteAll(){
+        repository.deleteAll();
     }
 }
