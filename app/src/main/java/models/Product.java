@@ -6,9 +6,11 @@ public class Product {
     private String docId;
     private String categoryId;
     private String size;
+    private boolean visible;
     private long price;
     private long createdAt;
     private long clicks;
+    private int quantity;
 
     public String getName() {
         return name;
@@ -72,5 +74,21 @@ public class Product {
 
     public void setClicks(long clicks) {
         this.clicks = clicks;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }
