@@ -17,10 +17,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
 import java.text.ParseException;
@@ -37,7 +38,7 @@ import utils.FirebaseUtil;
 import static models.Commons.MODEL;
 import static models.Commons.REQUESTS;
 
-public class RequestServiceActivity extends AppCompatActivity implements View.OnClickListener {
+public class ServiceRequestActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView txtDate, txtTime;
     private EditText edtFName, edtLName, edtPhone, edtAddress, edtDescription;
     private String date, time, userId;
@@ -49,7 +50,7 @@ public class RequestServiceActivity extends AppCompatActivity implements View.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_request_service);
+        setContentView(R.layout.activity_service_request);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Service Request Form");
@@ -65,6 +66,7 @@ public class RequestServiceActivity extends AppCompatActivity implements View.On
         edtPhone = findViewById(R.id.edtPhone);
         edtAddress = findViewById(R.id.edtAddress);
         edtDescription = findViewById(R.id.edtDescription);
+        ImageView imgHeader = findViewById(R.id.imgHeader);
 
         long currentDate = new Date().getTime();
         date = DateFormat.format("d/M/yyyy", currentDate).toString();
@@ -82,6 +84,7 @@ public class RequestServiceActivity extends AppCompatActivity implements View.On
         myProfile = (json.equals("")) ? null : gson.fromJson(json, User.class);
         edtFName.setText(myProfile.getFirstName());
         edtLName.setText(myProfile.getLastName());
+        Glide.with(this).load(service.getIcon()).into(imgHeader);
     }
 
     @Override
@@ -140,7 +143,7 @@ public class RequestServiceActivity extends AppCompatActivity implements View.On
 
         String id = FirebaseUtil.getDatabase().collection(REQUESTS).document().getId();
         ServiceRequest request = new ServiceRequest(service.getName(), service.getDocId(), service.getIcon(), id,
-                fName, lName, userId, phone, address, description, deliveryTime);
+                fName, lName, userId, phone, myProfile.getEmail(), address, description, deliveryTime);
 
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this, R.style.Theme_AppCompat_Dialog_Alert);
         builder.setMessage("Do you want to proceed with this request?")
@@ -157,8 +160,8 @@ public class RequestServiceActivity extends AppCompatActivity implements View.On
     }
 
     private void showPrompt() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(RequestServiceActivity.this);
-        LayoutInflater inflater = LayoutInflater.from(RequestServiceActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ServiceRequestActivity.this);
+        LayoutInflater inflater = LayoutInflater.from(ServiceRequestActivity.this);
         View dialogView = inflater.inflate(R.layout.dialog_request_successful, null);
         builder.setView(dialogView);
         final AlertDialog dialog= builder.create();
