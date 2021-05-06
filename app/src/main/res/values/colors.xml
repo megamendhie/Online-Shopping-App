@@ -5,4 +5,6 @@
     <color name="colorAccent">#D81B60</color>
     <color name="colorStatusRed">#FF0000</color>
     <color name="colorStatusAmber">#FFBF00</color>
+    <color name="colorAppAmber">#F9A825</color>
+    <color name="colorAppGray">#70707A</color>
 </resources>
