@@ -19,15 +19,19 @@ import com.google.firebase.firestore.Query;
 import com.sqube.desantosdirectory.R;
 
 import interfaces.CartOperationListener;
+import interfaces.OnAddListener;
+import interfaces.OnAddProductListener;
 import models.Product;
 import utils.Reusable;
 
 public class ProductAdapterAdmin extends FirestoreRecyclerAdapter<Product, ProductAdapterAdmin.ProductHolder> {
+    private final OnAddProductListener onAddListener;
 
     public ProductAdapterAdmin(@NonNull Query query, Context context) {
         super(new FirestoreRecyclerOptions.Builder<Product>()
                 .setQuery(query, Product.class)
                 .build());
+        onAddListener = (OnAddProductListener) context;
     }
 
     @Override
@@ -37,18 +41,8 @@ public class ProductAdapterAdmin extends FirestoreRecyclerAdapter<Product, Produ
         holder.txtPrice.setText(Html.fromHtml("&#8358;"+Reusable.getFormattedAmount(model.getPrice())));
         if(!model.getIcon().isEmpty() && !model.getIcon().equals("non"))
             Glide.with(holder.imgIcon.getContext()).load(model.getIcon()).into(holder.imgIcon);
-        holder.imgEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        holder.imgDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+        holder.imgEdit.setOnClickListener(v -> onAddListener.onEdit(model, false));
+        holder.imgDelete.setOnClickListener(v -> onAddListener.onEdit(model, true));
     }
 
     @NonNull

@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
+import com.sqube.desantosdirectory.AdminProductActivity;
 import com.sqube.desantosdirectory.ProductActivity;
 import com.sqube.desantosdirectory.R;
 
@@ -27,7 +28,7 @@ import utils.GlideApp;
 import static models.Commons.MODEL;
 
 public class CategoryAdapterAdmin extends FirestoreRecyclerAdapter<Category, CategoryAdapterAdmin.CategoryHolder> {
-    private OnAddListener onAddListener;
+    private final OnAddListener onAddListener;
 
     public CategoryAdapterAdmin(@NonNull Query query, Context context) {
         super(new FirestoreRecyclerOptions.Builder<Category>()
@@ -40,7 +41,7 @@ public class CategoryAdapterAdmin extends FirestoreRecyclerAdapter<Category, Cat
     protected void onBindViewHolder(@NonNull CategoryHolder holder, int position, @NonNull final Category model) {
         holder.txtName.setText(model.getName());
         holder.itemView.setOnClickListener(view -> {
-            Intent intent = new Intent(view.getContext(), ProductActivity.class);
+            Intent intent = new Intent(view.getContext(), AdminProductActivity.class);
             intent.putExtra(MODEL, model);
             view.getContext().startActivity(intent);
         });

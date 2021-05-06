@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,7 +19,7 @@ import com.google.firebase.firestore.Query;
 import com.sqube.desantosdirectory.LoginActivity;
 import com.sqube.desantosdirectory.ProductActivity;
 import com.sqube.desantosdirectory.R;
-import com.sqube.desantosdirectory.RequestServiceActivity;
+import com.sqube.desantosdirectory.ServiceRequestActivity;
 
 import models.Category;
 import utils.FirebaseUtil;
@@ -43,7 +42,7 @@ public class CategoryAdapter extends FirestoreRecyclerAdapter<Category, Category
         holder.txtName.setText(model.getName());
         holder.itemView.setOnClickListener(view -> {
          Intent intent = model.getType().equals(PRODUCT)? new Intent(view.getContext(), ProductActivity.class):
-                        new Intent(view.getContext(), RequestServiceActivity.class);
+                        new Intent(view.getContext(), ServiceRequestActivity.class);
                 intent.putExtra(MODEL, model);
                 if(model.getType().equals(SERVICE)&& FirebaseUtil.getAuth().getCurrentUser()==null){
                     view.getContext().startActivity(new Intent(view.getContext(), LoginActivity.class));

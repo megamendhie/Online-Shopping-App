@@ -1,31 +1,35 @@
 package adapters;
 
+import android.content.Context;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 import com.sqube.desantosdirectory.R;
 
+import interfaces.CartOperationListener;
 import models.Product;
 import utils.Reusable;
 
 public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAdapter.ProductHolder> {
+    private final CartOperationListener listener;
 
-    public ProductAdapter(@NonNull Query query) {
+    public ProductAdapter(@NonNull Query query, Context context) {
         super(new FirestoreRecyclerOptions.Builder<Product>()
                 .setQuery(query, Product.class)
                 .build());
+        listener = (CartOperationListener)context;
     }
 
     @Override
@@ -33,6 +37,14 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
         holder.txtName.setText(model.getName());
         holder.txtSize.setText(model.getSize());
         holder.txtPrice.setText(Html.fromHtml("&#8358;"+Reusable.getFormattedAmount(model.getPrice())));
+        if(!model.getIcon().isEmpty() && !model.getIcon().equals("non"))
+            Glide.with(holder.imgIcon.getContext()).load(model.getIcon()).into(holder.imgIcon);
+        holder.imgAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onAdd(model);
+            }
+        });
     }
 
     @NonNull
