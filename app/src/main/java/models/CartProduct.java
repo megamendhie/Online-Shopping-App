@@ -1,5 +1,8 @@
 package models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
@@ -8,7 +11,7 @@ import androidx.room.PrimaryKey;
 import java.util.Date;
 
 @Entity (tableName = "cart_table")
-public class CartProduct {
+public class CartProduct implements Parcelable {
     @PrimaryKey
     @NonNull
     private String docId;
@@ -20,6 +23,8 @@ public class CartProduct {
     private long createdAt;
     private int quantity;
 
+    public CartProduct(){}
+
     public CartProduct(Product product){
         this.name = product.getName();
         this.icon = product.getIcon();
@@ -28,8 +33,31 @@ public class CartProduct {
         this.size = product.getSize();
         this.price = product.getPrice();
         this.createdAt = new Date().getTime();
-        this.quantity = 0;
+        this.quantity = 1;
     }
+
+    protected CartProduct(Parcel in) {
+        docId = in.readString();
+        name = in.readString();
+        icon = in.readString();
+        categoryId = in.readString();
+        size = in.readString();
+        price = in.readLong();
+        createdAt = in.readLong();
+        quantity = in.readInt();
+    }
+
+    public static final Creator<CartProduct> CREATOR = new Creator<CartProduct>() {
+        @Override
+        public CartProduct createFromParcel(Parcel in) {
+            return new CartProduct(in);
+        }
+
+        @Override
+        public CartProduct[] newArray(int size) {
+            return new CartProduct[size];
+        }
+    };
 
     @Override
     public boolean equals(@Nullable Object obj) {
@@ -102,5 +130,22 @@ public class CartProduct {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(docId);
+        dest.writeString(name);
+        dest.writeString(icon);
+        dest.writeString(categoryId);
+        dest.writeString(size);
+        dest.writeLong(price);
+        dest.writeLong(createdAt);
+        dest.writeInt(quantity);
     }
 }
