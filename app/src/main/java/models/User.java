@@ -8,6 +8,7 @@ public class User {
     private String email;
     private String uid;
     private String pic;
+    private String role;
     private boolean admin;
     private long createdAt;
 
@@ -19,9 +20,11 @@ public class User {
         this.email = email;
         this.uid = uid;
         this.pic = "";
+        this.role = "user";
         setAdmin(false);
         createdAt = new Date().getTime();
     }
+
     public String getFirstName() {
         return firstName;
     }
@@ -76,5 +79,13 @@ public class User {
 
     public void setPic(String pic) {
         this.pic = pic;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
