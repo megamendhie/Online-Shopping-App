@@ -97,7 +97,7 @@ public class AdminCategoryActivity extends AppCompatActivity implements OnAddLis
     public void onEdit(Category category, boolean delete) {
         if (delete) {
             androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this, R.style.Theme_AppCompat_Dialog_Alert);
-            builder.setMessage("Are sure you want to delete "+category.getName()+" category?")
+            builder.setMessage("Are you sure you want to delete "+category.getName()+" category?")
                     .setTitle("Delete Category")
                     .setPositiveButton("Proceed", (dialogInterface, i) -> deleteCategory(category))
                     .setNegativeButton("No", (dialog, which) -> dialog.cancel())
