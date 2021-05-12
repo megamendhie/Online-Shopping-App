@@ -25,7 +25,7 @@
         <item name="android:textColorHint">#70707A</item>
     </style>
 
-    <style name="CustomButtomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
+    <style name="CustomButtomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/CustomButtomSheetStyle</item>
     </style>
     <style name="CustomButtomSheetStyle" parent="Widget.Design.BottomSheet.Modal">

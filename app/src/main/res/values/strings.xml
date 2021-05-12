@@ -5,4 +5,12 @@
     <string name="txt_category_image">Category image</string>
     <string name="txt_sample">Sample</string>
     <string name="txt_my_cart">My Cart</string>
+    <string name="txt_try_again">-Try again or click here to contact us.</string>
+    <string name="txt_processing">Performing transaction... please wait</string>
+    <array name="status_type">
+        <item>All statuses</item>
+        <item>Successful</item>
+        <item>Pending</item>
+        <item>Cancelled</item>
+    </array>
 </resources>
