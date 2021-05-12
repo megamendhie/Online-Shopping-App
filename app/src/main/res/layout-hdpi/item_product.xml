@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="22dp"
+    app:cardElevation="2dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+
+        <RelativeLayout
+            android:id="@+id/lnrProduct"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:padding="6dp"
+            app:layout_constraintDimensionRatio="4:5.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:id="@+id/imgIcon"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/icon_santos"
+                android:layout_marginTop="20dp"
+                android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/txtName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Oil and Gas iii"
+                android:textSize="16sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/imgIcon"/>
+            <TextView
+                android:id="@+id/txtSize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2pcs"
+                android:layout_below="@id/txtName"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_alignParentBottom="true">
+                <TextView
+                    android:id="@+id/txtPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="1dp"
+                    android:layout_centerVertical="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:text="N600"/>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/imgAdd"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:fabSize="mini"
+                    android:layout_margin="1dp"
+                    app:backgroundTint="#049255"
+                    app:tint="@android:color/white"
+                    app:srcCompat="@drawable/ic_baseline_add_24"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

@@ -6,17 +6,21 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.SetOptions;
@@ -43,6 +47,8 @@ public class AddCategoryFragment extends BottomSheetDialogFragment {
     private Category category;
     private boolean editable;
     private String type;
+    private static final int PICK_IMAGE = 12;
+    private boolean visible = true;
 
     @Nullable
     @Override
@@ -58,24 +64,31 @@ public class AddCategoryFragment extends BottomSheetDialogFragment {
         edtName = view.findViewById(R.id.edtName);
         prgAdd = view.findViewById(R.id.prgAdd);
         ImageView imgAddIcon = view.findViewById(R.id.imgAddIcon);
-        imgAddIcon.setOnClickListener(v ->
-                CropImage.activity().setAspectRatio(1,1).start(getContext(), this));
+        imgAddIcon.setOnClickListener(v -> accessTheGallery());
         FrameLayout frmImage = view.findViewById(R.id.frmImage);
-        frmImage.setOnClickListener(v -> openCropper());
+        frmImage.setOnClickListener(v -> accessTheGallery());
         btnAdd = view.findViewById(R.id.btnAdd);
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(editable)
-                    addCategory();
-                else
-                    addCategory(type);
-            }
+        btnAdd.setOnClickListener(v -> {
+            if(editable)
+                addCategory();
+            else
+                addCategory(type);
+        });
+
+        SwitchCompat swtVisible = view.findViewById(R.id.swtVisible);
+        swtVisible.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(editable)
+                category.setVisible(isChecked);
+            else
+                visible = isChecked;
         });
 
         if(editable){
             edtName.setText(category.getName());
             btnAdd.setText("Update Category");
+            if(!category.getIcon().isEmpty() && !category.getIcon().equals("non"))
+                Glide.with(getContext()).load(category.getIcon()).into(imgIcon);
+            swtVisible.setChecked(category.isVisible());
         }
         return view;
     }
@@ -141,7 +154,7 @@ public class AddCategoryFragment extends BottomSheetDialogFragment {
                 .addOnSuccessListener(taskSnapshot -> taskSnapshot.getMetadata().getReference().getDownloadUrl()
                         .addOnSuccessListener(uri -> {
                             String url = uri.toString();
-                            category = new Category(name, url, id, type);
+                            category = new Category(name, url, id, type, visible);
                             FirebaseUtil.getDatabase().collection(CATEGORIES).document(id).set(category);
                             prgAdd.setVisibility(View.GONE);
                             btnAdd.setEnabled(true);
@@ -169,6 +182,15 @@ public class AddCategoryFragment extends BottomSheetDialogFragment {
             CropImage.activity(filePath).setAspectRatio(1,1).start(getContext(), this);
     }
 
+    public void accessTheGallery(){
+        Intent i = new Intent(
+                Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        );
+        i.setType("image/*");
+        startActivityForResult(i, PICK_IMAGE);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -181,6 +203,10 @@ public class AddCategoryFragment extends BottomSheetDialogFragment {
                 Exception error = result.getError();
                 Toast.makeText(getContext(), "An error occured", Toast.LENGTH_SHORT).show();
             }
+        }
+        if (requestCode==PICK_IMAGE&&resultCode == RESULT_OK) {
+            filePath = data.getData();
+            imgIcon.setImageURI(filePath);
         }
     }
 }

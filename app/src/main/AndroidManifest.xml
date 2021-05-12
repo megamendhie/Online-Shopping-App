@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sqube.desantosdirectory">
-
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon_santos"
@@ -9,8 +9,27 @@
         android:roundIcon="@drawable/icon_santos"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddCategoryActivity"></activity>
-        <activity android:name=".AdminCategoryActivity" />
+        <activity
+            android:name=".CheckoutActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".RevenueActivity" />
+        <activity android:name=".AdminManagementActivity" />
+        <activity android:name=".OrdersActivity" />
+        <activity android:name=".EditProfileActivity" />
+        <activity android:name=".AdminProductActivity" />
+        <activity android:name=".ServiceRequestDetailsActivity" />
+        <activity android:name=".ProductRequestDetailsActivity" />
+        <activity android:name=".ServiceRequestAdminActivity" />
+        <activity
+            android:name=".ServiceRequestActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+        <activity android:name=".ProductPurchaseActivity" />
+        <activity
+            android:name=".AdminCategoryActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".ProfileActivity" />
         <activity
             android:name=".SignupActivity"
@@ -24,6 +43,7 @@
         <activity android:name=".ProductActivity" />
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,6 +51,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name="services.UserDataFetcher" />
     </application>
 
 </manifest>

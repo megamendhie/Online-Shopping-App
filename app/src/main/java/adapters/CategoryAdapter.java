@@ -54,6 +54,26 @@ public class CategoryAdapter extends FirestoreRecyclerAdapter<Category, Category
 
         if(!model.getIcon().isEmpty() && !model.getIcon().equals("non"))
             Glide.with(holder.imgIcon.getContext()).load(model.getIcon()).into(holder.imgIcon);
+
+        int backgroundInt = position%8;
+        switch (backgroundInt){
+            case 0:
+                holder.lnrCategory.setBackgroundResource(R.drawable.bg_category_1); break;
+            case 1:
+                holder.lnrCategory.setBackgroundResource(R.drawable.bg_category_2); break;
+            case 2:
+                holder.lnrCategory.setBackgroundResource(R.drawable.bg_category_3); break;
+            case 3:
+                holder.lnrCategory.setBackgroundResource(R.drawable.bg_category_4); break;
+            case 4:
+                holder.lnrCategory.setBackgroundResource(R.drawable.bg_category_5); break;
+            case 5:
+                holder.lnrCategory.setBackgroundResource(R.drawable.bg_category_6); break;
+            case 6:
+                holder.lnrCategory.setBackgroundResource(R.drawable.bg_category_7); break;
+            default:
+                holder.lnrCategory.setBackgroundResource(R.drawable.bg_category_8); break;
+        }
     }
 
     @Override
