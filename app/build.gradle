@@ -14,6 +14,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
+        buildConfigField 'String', 'PSTK_PUBLIC_KEY', PSTK_PUBLIC_KEY
     }
     buildTypes {
         release {
@@ -43,11 +44,13 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:7.1.1'      //Authentication UI
     implementation 'com.firebaseui:firebase-ui-storage:7.1.1'   //Storage UI
     implementation 'com.firebaseui:firebase-ui-firestore:7.1.1' //Firestore UI
+    implementation 'co.paystack.android:paystack:3.1.2' //PayStack
     // Room components
     implementation "androidx.room:room-runtime:$roomVersion"
     annotationProcessor "androidx.room:room-compiler:$roomVersion"
     // Lifecycle components
-    implementation "androidx.lifecycle:lifecycle-extensions:$archLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$archLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata:$archLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-common-java8:$archLifecycleVersion"
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.4.0-alpha02'
