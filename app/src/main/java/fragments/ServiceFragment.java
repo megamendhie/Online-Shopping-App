@@ -26,6 +26,7 @@ import static models.Commons.PRODUCT;
 import static models.Commons.SERVICE;
 import static models.Commons.SERVICES;
 import static models.Commons.TYPE;
+import static models.Commons.VISIBLE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,7 +57,8 @@ public class ServiceFragment extends Fragment {
     }
 
     private void loadProductCategories() {
-        Query query = FirebaseUtil.getDatabase().collection(CATEGORIES).orderBy(CREATED_AT).whereEqualTo(TYPE, SERVICE);
+        Query query = FirebaseUtil.getDatabase().collection(CATEGORIES).orderBy(CREATED_AT)
+                .whereEqualTo(TYPE, SERVICE).whereEqualTo(VISIBLE, true);
         CategoryAdapter adapter = new CategoryAdapter(query);
         lstServices.setAdapter(adapter);
         adapter.startListening();

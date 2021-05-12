@@ -29,6 +29,7 @@ import static models.Commons.PRODUCT;
 import static models.Commons.PRODUCTS;
 import static models.Commons.SERVICE;
 import static models.Commons.TYPE;
+import static models.Commons.VISIBLE;
 
 
 /**
@@ -50,12 +51,11 @@ public class ProductFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2);
         lstProducts.setLayoutManager(gridLayoutManager);
         ImageView imgHome = view.findViewById(R.id.imgHome);
-        imgHome.setOnLongClickListener(v -> {
+        imgHome.setOnClickListener(v -> {
             if(FirebaseUtil.getAuth().getCurrentUser()==null)
                 startActivity(new Intent(getContext(), LoginActivity.class));
             else
                 startActivity(new Intent(getContext(), ProfileActivity.class));
-            return false;
         });
         CardView crdSearch = view.findViewById(R.id.search_cardView);
         crdSearch.setOnClickListener(view1 -> {
@@ -68,7 +68,8 @@ public class ProductFragment extends Fragment {
     }
 
     private void loadProductCategories() {
-        Query query = FirebaseUtil.getDatabase().collection(CATEGORIES).orderBy(CREATED_AT).whereEqualTo(TYPE, PRODUCT);
+        Query query = FirebaseUtil.getDatabase().collection(CATEGORIES).orderBy(CREATED_AT)
+                .whereEqualTo(TYPE, PRODUCT).whereEqualTo(VISIBLE, true);
         CategoryAdapter adapter = new CategoryAdapter(query);
         lstProducts.setAdapter(adapter);
         adapter.startListening();
