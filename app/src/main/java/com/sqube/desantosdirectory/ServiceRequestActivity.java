@@ -84,6 +84,10 @@ public class ServiceRequestActivity extends AppCompatActivity implements View.On
         myProfile = (json.equals("")) ? null : gson.fromJson(json, User.class);
         edtFName.setText(myProfile.getFirstName());
         edtLName.setText(myProfile.getLastName());
+        if(!myProfile.getPhone().isEmpty())
+            edtPhone.setText(myProfile.getPhone());
+        if(!myProfile.getAddress().isEmpty())
+            edtAddress.setText(myProfile.getAddress());
         Glide.with(this).load(service.getIcon()).into(imgHeader);
     }
 
