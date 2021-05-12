@@ -13,7 +13,7 @@
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:background="@drawable/bg_category_1"
-        app:layout_constraintDimensionRatio="5:5"
+        app:layout_constraintDimensionRatio="5:5.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -23,7 +23,8 @@
             android:id="@+id/imgIcon"
             android:layout_width="90dp"
             android:layout_height="90dp"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="30dp"
+            android:src="@drawable/display_picture"/>
         <TextView
             android:id="@+id/txtName"
             android:layout_width="wrap_content"
