@@ -6,6 +6,8 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
+    private String phone;
+    private String address;
     private String uid;
     private String pic;
     private String role;
@@ -21,6 +23,8 @@ public class User {
         this.uid = uid;
         this.pic = "";
         this.role = "user";
+        this.phone = "";
+        this.address = "";
         setAdmin(false);
         createdAt = new Date().getTime();
     }
@@ -87,5 +91,21 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

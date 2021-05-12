@@ -3,21 +3,34 @@ package models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Date;
+
 public class Category implements Parcelable {
     private String name;
     private String icon;
     private String docId;
     private String type;
+    private boolean visible;
     private long createdAt;
     private long clicks;
 
     public Category(){}
+
+    public Category(String name, String icon, String docId, String type, boolean visible){
+        this.name = name;
+        this.icon = icon;
+        this.docId = docId;
+        this.type = type;
+        this.visible = visible;
+        this.createdAt = new Date().getTime();
+    }
 
     private Category(Parcel in) {
         name = in.readString();
         icon = in.readString();
         docId = in.readString();
         type = in.readString();
+        visible = in.readByte() != 0;
         createdAt = in.readLong();
         clicks = in.readLong();
     }
@@ -58,6 +71,14 @@ public class Category implements Parcelable {
         this.docId = docId;
     }
 
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
     public long getCreatedAt() {
         return createdAt;
     }
@@ -93,6 +114,7 @@ public class Category implements Parcelable {
         parcel.writeString(icon);
         parcel.writeString(docId);
         parcel.writeString(type);
+        parcel.writeByte((byte) (visible? 1:0));
         parcel.writeLong(createdAt);
         parcel.writeLong(clicks);
     }
