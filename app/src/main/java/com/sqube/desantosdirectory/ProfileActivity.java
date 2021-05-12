@@ -24,18 +24,22 @@ import utils.FirebaseUtil;
 
 import static models.Commons.CATEGORY;
 import static models.Commons.PRODUCT;
+import static models.Commons.PRODUCTS;
 import static models.Commons.SERVICE;
+import static models.Commons.SERVICES;
+import static models.Commons.TYPE;
 
 public class ProfileActivity extends AppCompatActivity{
     private TextView txtName;
-    private String userId;
+    private ImageView imgDp;
     private final Gson gson = new Gson();
     private User myProfile;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String json = prefs.getString("profile", "");
         myProfile = (json.equals("")) ? null : gson.fromJson(json, User.class);
         if(myProfile==null)
@@ -44,18 +48,37 @@ public class ProfileActivity extends AppCompatActivity{
         setContentView(myProfile.isAdmin()?R.layout.activity_profile:R.layout.activity_profile_user);
         if(myProfile.isAdmin()){
             Button btnManageAdmin = findViewById(R.id.btnManageAdmin);
+            Button btnRevenue = findViewById(R.id.btnRevenue);
             btnManageAdmin.setVisibility(myProfile.getRole().equals("owner")?View.VISIBLE:View.GONE);
+            btnRevenue.setVisibility(myProfile.getRole().equals("owner")?View.VISIBLE:View.GONE);
         }
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Profile");
 
         txtName = findViewById(R.id.txtName);
+        imgDp = findViewById(R.id.imgDp);
         if(FirebaseUtil.getAuth().getCurrentUser()==null)
             return;
-        userId = FirebaseUtil.getAuth().getCurrentUser().getUid();
+        String userId = FirebaseUtil.getAuth().getCurrentUser().getUid();
+    }
 
-        ImageView imgDp = findViewById(R.id.imgDp);
+    public void editProfile(View view){
+        startActivity(new Intent(this, EditProfileActivity.class));
+    }
+
+    public void seeRevenue(View view){
+        startActivity(new Intent(this, RevenueActivity.class));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String json = prefs.getString("profile", "");
+        myProfile = (json.equals("")) ? null : gson.fromJson(json, User.class);
+        if(myProfile==null)
+            return;
 
         txtName.setText(String.format("%s %s", myProfile.getFirstName(), myProfile.getLastName()));
         if(myProfile.getPic()!=null&&!myProfile.getPic().isEmpty()&&!myProfile.getPic().equals("non"))
@@ -63,11 +86,27 @@ public class ProfileActivity extends AppCompatActivity{
     }
 
     public void openProductOrders(View view){
-        startActivity(new Intent(this, ProductPurchaseAdminActivity.class));
+        Intent intent = new Intent(this, ServiceRequestAdminActivity.class);
+        intent.putExtra(TYPE, PRODUCTS);
+        startActivity(intent);
     }
 
     public void openServiceRequests(View view){
-        startActivity(new Intent(this, ServiceRequestAdminActivity.class));
+        Intent intent = new Intent(this, ServiceRequestAdminActivity.class);
+        intent.putExtra(TYPE, SERVICES);
+        startActivity(intent);
+    }
+
+    public void openProductOrdersUser(View view){
+        Intent intent = new Intent(this, OrdersActivity.class);
+        intent.putExtra(TYPE, PRODUCTS);
+        startActivity(intent);
+    }
+
+    public void openServiceRequestsUser(View view){
+        Intent intent = new Intent(this, OrdersActivity.class);
+        intent.putExtra(TYPE, SERVICES);
+        startActivity(intent);
     }
 
     public void openCategory(View view) {
@@ -89,6 +128,10 @@ public class ProfileActivity extends AppCompatActivity{
             mGoogleSignInClient.signOut();
             finish();
         }
+    }
+
+    public void openAdminManager(View view){
+        startActivity(new Intent(this, AdminManagementActivity.class));
     }
 
     @Override

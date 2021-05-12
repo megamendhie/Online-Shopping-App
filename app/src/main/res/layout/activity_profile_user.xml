@@ -11,11 +11,11 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginTop="60dp"
-        app:civ_border_color="#66049255"
-        app:srcCompat="@drawable/ic_baseline_account_circle_24"
+        android:src="@drawable/ic_account_circle_64"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="VectorDrawableCompat"/>
 
     <TextView
         android:id="@+id/txtName"
@@ -33,6 +33,7 @@
         android:id="@+id/btnEditProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="editProfile"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:backgroundTint="@android:color/holo_red_light"
@@ -53,6 +54,7 @@
         android:id="@+id/btnOrders"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="openProductOrdersUser"
         android:textSize="16sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:text="Product Orders"
@@ -73,6 +75,7 @@
         android:id="@+id/btnRequests"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="openServiceRequestsUser"
         android:textSize="16sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:text="Service Requests"
