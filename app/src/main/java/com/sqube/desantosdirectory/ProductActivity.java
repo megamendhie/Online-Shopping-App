@@ -35,6 +35,7 @@ import static models.Commons.PRODUCTS;
 import static models.Commons.SERVICE;
 import static models.Commons.SERVICES;
 import static models.Commons.TYPE;
+import static models.Commons.VISIBLE;
 
 public class ProductActivity extends AppCompatActivity implements CartOperationListener {
     private ActionBar actionBar;
@@ -72,7 +73,8 @@ public class ProductActivity extends AppCompatActivity implements CartOperationL
             return;
         actionBar.setTitle(category.getName());
         String COLLECTION = category.getType().equals(SERVICE)? SERVICES : PRODUCTS;
-        Query query = FirebaseUtil.getDatabase().collection(COLLECTION).orderBy(CREATED_AT).whereEqualTo(CATEGORY_ID, category.getDocId());
+        Query query = FirebaseUtil.getDatabase().collection(COLLECTION).orderBy(CREATED_AT)
+                .whereEqualTo(CATEGORY_ID, category.getDocId()).whereEqualTo(VISIBLE, true);
         ProductAdapter adapter = new ProductAdapter(query, this);
         lstProducts.setAdapter(adapter);
         adapter.startListening();

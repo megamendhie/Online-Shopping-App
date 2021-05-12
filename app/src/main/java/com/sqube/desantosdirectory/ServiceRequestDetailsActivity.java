@@ -1,12 +1,19 @@
 package com.sqube.desantosdirectory;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.ImageViewCompat;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,17 +24,17 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.gson.Gson;
 
 import models.ServiceRequest;
+import models.User;
 import utils.FirebaseUtil;
 
 import static models.Commons.REQUESTS;
 import static models.Commons.SERVICE;
 
 public class ServiceRequestDetailsActivity extends AppCompatActivity implements View.OnClickListener {
+    private final Gson gson = new Gson();
     Button btnPending, btnDelivered, btnCancel;
     TextView txtServiceName, txtName, txtPhone, txtDeliveryDate, txtDate, txtAddress, txtEmail, txtDescription, txtStatus;
     ImageView imgStatus, imgPhone, imgEmail, imgIcon;
@@ -42,6 +49,11 @@ public class ServiceRequestDetailsActivity extends AppCompatActivity implements 
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Service Details");
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String json = prefs.getString("profile", "");
+        User myProfile = (json.equals("")) ? null : gson.fromJson(json, User.class);
+
+        ConstraintLayout cnsAction = findViewById(R.id.cnsAction);
         btnPending = findViewById(R.id.btnPending); btnPending.setOnClickListener(this);
         btnDelivered = findViewById(R.id.btnDelivered); btnDelivered.setOnClickListener(this);
         btnCancel = findViewById(R.id.btnCancel); btnCancel.setOnClickListener(this);
@@ -61,6 +73,7 @@ public class ServiceRequestDetailsActivity extends AppCompatActivity implements 
         imgEmail = findViewById(R.id.imgEmail); imgEmail.setOnClickListener(this);
         imgIcon = findViewById(R.id.imgIcon);
 
+        cnsAction.setVisibility(myProfile.isAdmin()? View.VISIBLE:View.GONE);
         request = getIntent().getParcelableExtra(SERVICE);
         loadRequestDetails();
         FirebaseUtil.getDatabase().collection(REQUESTS).document(request.getDocId()).addSnapshotListener((value, error) -> {
@@ -133,6 +146,16 @@ public class ServiceRequestDetailsActivity extends AppCompatActivity implements 
                 }
                 FirebaseUtil.getDatabase().collection(REQUESTS).document(request.getDocId()).update("status", 2);
                 Snackbar.make(txtStatus, "SERVICE CANCELLED", Snackbar.LENGTH_SHORT).show();
+                break;
+            case R.id.imgPhone:
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", request.getPhone(), null));
+                startActivity(intent);
+                break;
+            case R.id.imgEmail:
+                Toast.makeText(this, "Copied!", Toast.LENGTH_SHORT).show();
+                ClipboardManager manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Copied code", request.getEmail());
+                manager.setPrimaryClip(clip);
                 break;
         }
     }

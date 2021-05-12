@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,18 +21,22 @@ import android.widget.TextView;
 import com.google.firebase.firestore.Query;
 
 import adapters.ProductAdapter;
+import interfaces.CartOperationListener;
+import models.CartProduct;
+import models.Product;
 import utils.FirebaseUtil;
 
 import static models.Commons.NAME;
 import static models.Commons.PRODUCTS;
 import static models.Commons.TYPE;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements CartOperationListener {
     private RecyclerView searchList;
     private ProgressBar prgSearch;
     private TextView txtPrompt;
     private SearchView.OnQueryTextListener onQueryTextListener;
     private ProductAdapter adapter;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,7 @@ public class SearchActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        context = this;
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,2);
         searchList.setLayoutManager(gridLayoutManager);
@@ -84,7 +90,7 @@ public class SearchActivity extends AppCompatActivity {
                         txtPrompt.setVisibility(View.VISIBLE);
 
                 });
-                adapter = new ProductAdapter(query);
+                adapter = new ProductAdapter(query,context);
                 searchList.setAdapter(adapter);
                 adapter.startListening();
                 return false;
@@ -102,5 +108,25 @@ public class SearchActivity extends AppCompatActivity {
         if(item.getItemId()==android.R.id.home)
             finish();
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onAdd(Product product) {
+
+    }
+
+    @Override
+    public void onRemove(CartProduct cartProduct) {
+
+    }
+
+    @Override
+    public void increaseQuantity(CartProduct product) {
+
+    }
+
+    @Override
+    public void deceaseQuantity(CartProduct product) {
+
     }
 }
