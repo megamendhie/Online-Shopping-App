@@ -26,6 +26,7 @@ import models.Category;
 import utils.GlideApp;
 
 import static models.Commons.MODEL;
+import static models.Commons.SERVICE;
 
 public class CategoryAdapterAdmin extends FirestoreRecyclerAdapter<Category, CategoryAdapterAdmin.CategoryHolder> {
     private final OnAddListener onAddListener;
@@ -41,6 +42,8 @@ public class CategoryAdapterAdmin extends FirestoreRecyclerAdapter<Category, Cat
     protected void onBindViewHolder(@NonNull CategoryHolder holder, int position, @NonNull final Category model) {
         holder.txtName.setText(model.getName());
         holder.itemView.setOnClickListener(view -> {
+            if(model.getType().equals(SERVICE))
+                return;
             Intent intent = new Intent(view.getContext(), AdminProductActivity.class);
             intent.putExtra(MODEL, model);
             view.getContext().startActivity(intent);
