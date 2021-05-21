@@ -124,6 +124,22 @@
             android:layout_marginStart="2dp"
             android:checked="true"
             android:layout_marginLeft="2dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:text="Landed Property"
+            android:textColor="@android:color/black"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:layout_marginLeft="30dp" />
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/swtLand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:checked="true"
+            android:layout_marginLeft="2dp" />
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton

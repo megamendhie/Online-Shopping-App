@@ -172,7 +172,8 @@ public class ProductPurchaseActivity extends AppCompatActivity implements View.O
         ProductRequest productRequest = new ProductRequest(allCartProducts, id, fName, lName, userId, phone,
                 myProfile.getEmail(), address, deliveryTime);
 
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this, R.style.Theme_AppCompat_Dialog_Alert);
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this,
+                R.style.Theme_AppCompat_Dialog_Alert);
         builder.setMessage("Do you want to proceed with this purchase?")
                 .setTitle("Confirm Purchase")
                 .setPositiveButton("Proceed", (dialogInterface, i) -> {

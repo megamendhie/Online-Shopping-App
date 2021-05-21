@@ -70,7 +70,7 @@
                     android:layout_margin="1dp"
                     app:backgroundTint="#049255"
                     app:tint="@android:color/white"
-                    app:srcCompat="@drawable/ic_baseline_add_24"
+                    app:srcCompat="@drawable/ic_add_cart_24"
                     android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true" />

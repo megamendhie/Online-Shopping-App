@@ -46,6 +46,7 @@ public class AddProductFragment extends BottomSheetDialogFragment {
     private String categoryId;
     private static final int PICK_IMAGE = 12;
     private boolean visible = true;
+    private boolean isLand = false;
 
     public AddProductFragment() {
         // Required empty public constructor
@@ -86,6 +87,14 @@ public class AddProductFragment extends BottomSheetDialogFragment {
                 visible = isChecked;
         });
 
+        SwitchCompat swtLand = view.findViewById(R.id.swtLand);
+        swtLand.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(editable)
+                product.setLand(isChecked);
+            else
+                isLand = isChecked;
+        });
+
         if(editable){
             edtName.setText(product.getName());
             edtSize.setText(product.getSize());
@@ -94,6 +103,7 @@ public class AddProductFragment extends BottomSheetDialogFragment {
             if(!product.getIcon().isEmpty() && !product.getIcon().equals("non"))
                 Glide.with(getContext()).load(product.getIcon()).into(imgIcon);
             swtVisible.setChecked(product.isVisible());
+            swtLand.setChecked(product.isLand());
         }
         return view;
     }
@@ -141,10 +151,6 @@ public class AddProductFragment extends BottomSheetDialogFragment {
                         prgAdd.setVisibility(View.GONE);
                         btnAdd.setEnabled(true);
                         Toast.makeText(getContext(), "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnProgressListener(taskSnapshot -> {
-                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
-                                .getTotalByteCount());
                     });
         else{
             FirebaseUtil.getDatabase().collection(PRODUCTS).document(product.getDocId()).set(product, SetOptions.merge());
@@ -185,7 +191,7 @@ public class AddProductFragment extends BottomSheetDialogFragment {
                 .addOnSuccessListener(taskSnapshot -> taskSnapshot.getMetadata().getReference().getDownloadUrl()
                         .addOnSuccessListener(uri -> {
                             String url = uri.toString();
-                            product = new Product(name, url, id, categoryId, size, visible, amount);
+                            product = new Product(name, url, id, categoryId, size, visible, isLand, amount);
                             FirebaseUtil.getDatabase().collection(PRODUCTS).document(id).set(product);
                             prgAdd.setVisibility(View.GONE);
                             btnAdd.setEnabled(true);

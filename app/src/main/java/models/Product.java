@@ -12,6 +12,7 @@ public class Product implements Parcelable {
     private String categoryId;
     private String size;
     private boolean visible;
+    private boolean land;
     private long price;
     private long createdAt;
     private long clicks;
@@ -19,13 +20,14 @@ public class Product implements Parcelable {
 
     public Product(){}
 
-    public Product(String name, String icon, String docId, String categoryId, String size, boolean visible, long price){
+    public Product(String name, String icon, String docId, String categoryId, String size, boolean visible, boolean land, long price){
         this.name = name;
         this.icon = icon;
         this.docId = docId;
         this.categoryId = categoryId;
         this.size = size;
         this.visible = visible;
+        this.land = land;
         this.price = price;
         this.createdAt = new Date().getTime();
     }
@@ -37,6 +39,7 @@ public class Product implements Parcelable {
         categoryId = in.readString();
         size = in.readString();
         visible = in.readByte() != 0;
+        land = in.readByte() != 0;
         price = in.readLong();
         createdAt = in.readLong();
         clicks = in.readLong();
@@ -135,6 +138,14 @@ public class Product implements Parcelable {
         this.visible = visible;
     }
 
+    public boolean isLand() {
+        return land;
+    }
+
+    public void setLand(boolean land) {
+        this.land = land;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -148,6 +159,7 @@ public class Product implements Parcelable {
         dest.writeString(categoryId);
         dest.writeString(size);
         dest.writeByte((byte) (visible ? 1 : 0));
+        dest.writeByte((byte) (land ? 1 : 0));
         dest.writeLong(price);
         dest.writeLong(createdAt);
         dest.writeLong(clicks);
