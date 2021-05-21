@@ -101,8 +101,8 @@ public class AdminProductActivity extends AppCompatActivity implements OnAddProd
     public void onEdit(Product product, boolean delete) {
         if (delete) {
             androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this, R.style.Theme_AppCompat_Dialog_Alert);
-            builder.setMessage("Are you sure you want to delete product?")
-                    .setTitle("Delete Product")
+            builder.setMessage("Are you sure you want to delete listing?")
+                    .setTitle("Delete Listing")
                     .setPositiveButton("Proceed", (dialogInterface, i) -> deleteCategory(product))
                     .setNegativeButton("No", (dialog, which) -> dialog.cancel())
                     .show();

@@ -51,7 +51,7 @@ public class AdminCategoryActivity extends AppCompatActivity implements OnAddLis
         }
 
         String type = getIntent().getStringExtra(CATEGORY);
-        actionBar.setTitle(type.equals(PRODUCT)? "Products":"Services");
+        actionBar.setTitle(type.equals(PRODUCT)? "Listings":"Services");
         btnAdd.setOnClickListener(v -> showAddCategoryDialog(type));
         loadCategories(type);
     }

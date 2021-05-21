@@ -37,6 +37,7 @@ import static models.Commons.VISIBLE;
  */
 public class ProductFragment extends Fragment {
     private RecyclerView lstProducts;
+    private CategoryAdapter adapter;
 
     public ProductFragment() {
         // Required empty public constructor
@@ -70,9 +71,24 @@ public class ProductFragment extends Fragment {
     private void loadProductCategories() {
         Query query = FirebaseUtil.getDatabase().collection(CATEGORIES).orderBy(CREATED_AT)
                 .whereEqualTo(TYPE, PRODUCT).whereEqualTo(VISIBLE, true);
-        CategoryAdapter adapter = new CategoryAdapter(query);
+        adapter = new CategoryAdapter(query);
         lstProducts.setAdapter(adapter);
         adapter.startListening();
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (adapter!=null)
+            adapter.stopListening();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(adapter!=null)
+            adapter.startListening();
     }
 
 }
